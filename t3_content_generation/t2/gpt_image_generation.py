@@ -12,7 +12,7 @@ from t3_content_generation._openai_client import OpenAIClientT3
 #     -H "Authorization: Bearer $OPENAI_API_KEY" \
 #     -H "Content-type: application/json" \
 #     -d '{
-#         "model": "gpt-image-1",
+#         "model": "gpt-image-2",
 #         "prompt": "smiling catdog."
 #     }'
 # Response:
@@ -26,7 +26,7 @@ from t3_content_generation._openai_client import OpenAIClientT3
 # }
 
 #TODO:
-# You need to create some images with `gpt-image-1` model:
+# You need to create some images with `gpt-image-2` model:
 #   - Generate an image with 'Smiling catdog'
 #   - Decode and save it locally
 # ---
