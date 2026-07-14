@@ -16,17 +16,49 @@ from t8_agent.task.tools.web_search import WebSearchTool
 
 
 def main():
-    #TODO:
-    # 1. Create UserClient
-    # 2. Create list with all tools (WebSearchTool, GetUserByIdTool, SearchUsersTool, CreateUserTool, UpdateUserTool, DeleteUserTool)
-    # 3. Create OpenAIBasedAgent with all tools (or AnthropicBasedAgent)
-    # 4. Create Conversation
-    # 5. Run infinite loop and in loop and:
-    #    - get user input from terminal (`input("> ").strip()`)
-    #    - Add User message to Conversation
-    #    - Call OpenAIClient with conversation history
-    #    - Add Assistant message to Conversation and print its content
-    raise NotImplementedError()
+    user_client = UserServiceClient()
+    tools=[
+        WebSearchTool(open_ai_api_key=OPENAI_API_KEY),
+        GetUserByIdTool(user_client),
+        SearchUsersTool(user_client),
+        CreateUserTool(user_client),
+        UpdateUserTool(user_client),
+        DeleteUserTool(user_client),
+    ]
+
+    # agent = OpenAIBasedAgent(
+    #     model="gpt-5.2",
+    #     api_key=OPENAI_API_KEY,
+    #     tools=tools,
+    #     system_prompt=SYSTEM_PROMPT,
+    # )
+    agent = AnthropicBasedAgent(
+        model="claude-sonnet-4-5",
+        api_key=ANTHROPIC_API_KEY,
+        tools=tools,
+        system_prompt=SYSTEM_PROMPT,
+    )
+
+    conversation = Conversation()
+
+    print("Type your question or 'exit' to quit.")
+    print("Sample:")
+    print("Add Andrej Karpathy as a new user")
+
+    while True:
+        user_input = input("> ").strip()
+
+        if user_input.lower() == "exit":
+            print("Exiting the chat. Goodbye!")
+            break
+
+        conversation.add_message(Message(Role.USER, user_input))
+
+        ai_message = agent.get_response(conversation.get_messages(), print_request=True)
+        conversation.add_message(ai_message)
+        print("🤖:", ai_message.content)
+        print("=" * 100)
+        print()
 
 
 main()
